@@ -9,11 +9,15 @@ import lab3.logger.level.Level;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Logger{
     public List<Appender> appenders;
     public List<Level> levels;
     Class clazz;
+
+    private TreeSet<LevelApender> levelApenders;
 
     private Logger(List<Level> levels, List<Appender> appenders, Class clazz) {
         this.levels = levels;
@@ -58,14 +62,9 @@ public class Logger{
     }
 
     public void log(Level level, String message) {
-        for (Appender appender: appenders) {
-            for (int i = 0; i < levels.size(); i++) {
-                Level l = levels.get(i);
-                if (level.levelValue <= l.levelValue) {
-                    appender.log(level, clazz, message);
-                }
-            }
+        SortedSet<LevelApender> la = levelApenders.tailSet(new LevelApender(level, null), true);
+        for (LevelApender levelApender : la) {
+            levelApender.getAppender().log(level, clazz, message);
         }
     }
-
 }
