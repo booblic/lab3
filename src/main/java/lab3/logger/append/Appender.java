@@ -4,7 +4,7 @@ import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
 public abstract class Appender {
-    Layout layout;
+    public Layout layout;
 
     public Appender(Layout layout) {
         this.layout = layout;
