@@ -29,4 +29,15 @@ public class Level {
     }
 
     public Level() {}
+
+    public static Level valueOf(String levelStr) {
+        switch (levelStr) {
+            case "ERROR" : return ERROR;
+            case "WARN" : return WARN;
+            case "INFO" : return INFO;
+            case "DEBUG" : return DEBUG;
+            case "TRACE" : return TRACE;
+        }
+        throw new IllegalArgumentException("Unsupported level");
+    }
 }

@@ -5,14 +5,19 @@ import lab3.logger.level.Level;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class Appender {
+@XmlSeeAlso({
+        ConsolAppender.class
+})
+public abstract class Appender {
     public String nameAppender;
     public Layout layout;
+
     @XmlTransient
     public Class cl;
     public String fileName;
@@ -58,6 +63,6 @@ public class Appender {
 
     public Appender() {}
 
-    public void log(Level level, Class clazz, String message) {}
+    public abstract void log(Level level, Class clazz, String message);
 
 }
