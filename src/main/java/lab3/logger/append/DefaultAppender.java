@@ -5,11 +5,15 @@ import lab3.logger.level.Level;
 
 public class DefaultAppender extends Appender {
 
+    public static final String nameAppender = "lab3.logger.append.DefaultAppender";
+
     public DefaultAppender(Layout layout) {
-        super(layout);
+        super(nameAppender, layout);
     }
 
+    public DefaultAppender() {}
+
     public void log(Level level, Class clazz, String message) {
-        System.out.println("DefaultAppender.log() " + message);
+        System.out.println(layout.messageBuilder(level, clazz, message));
     }
 }

@@ -1,5 +1,8 @@
 package lab3.logger.level;
 
+import javax.xml.bind.annotation.XmlTransient;
+
+//@XmlType(propOrder = {"ERROR", "WARN", "INFO", "DEBUG", "TRACE"}, name = "level")
 public class Level {
     public final static int ERROR_INT = 1;
     public final static int WARN_INT  = 2;
@@ -24,4 +27,6 @@ public class Level {
         this.levelValue = levelValue;
         this.levelStr = levelStr;
     }
+
+    public Level() {}
 }
