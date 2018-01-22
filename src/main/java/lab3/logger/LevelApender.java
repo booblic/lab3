@@ -5,20 +5,29 @@ import lab3.logger.append.ConsolAppender;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
-@XmlType(propOrder = {"appender", "level"})
-public class LevelApender implements Comparable<LevelApender> {
+/**
+ * @author VYZH
+ * @since 10.01.2018
+ */
+public class LevelApender {
+
+    @XmlElement
+    @XmlJavaTypeAdapter(LevelAdapter.class)
     public Level level = Level.TRACE;
+
+    @XmlElementRef
     public Appender appender = new ConsolAppender(new Layout("%p %c %m %d"));
+
 
     public LevelApender(Level level, Appender appender) {
         this.level = level;
         this.appender = appender;
     }
-
-    public LevelApender() {}
 
     public Level getLevel() {
         return level;
@@ -39,10 +48,5 @@ public class LevelApender implements Comparable<LevelApender> {
     @Override
     public int hashCode() {
         return Objects.hash(level.levelValue);
-    }
-
-    @Override
-    public int compareTo(LevelApender o) {
-        return level.levelValue - o.level.levelValue;
     }
 }
