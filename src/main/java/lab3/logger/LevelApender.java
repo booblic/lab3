@@ -1,8 +1,13 @@
 package lab3.logger;
 
 import lab3.logger.append.Appender;
+import lab3.logger.append.ConsolAppender;
+import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
 /**
@@ -10,8 +15,14 @@ import java.util.Objects;
  * @since 10.01.2018
  */
 public class LevelApender {
-    private final Level level;
-    private final Appender appender;
+
+    @XmlElement
+    @XmlJavaTypeAdapter(LevelAdapter.class)
+    public Level level = Level.TRACE;
+
+    @XmlElementRef
+    public Appender appender = new ConsolAppender(new Layout("%p %c %m %d"));
+
 
     public LevelApender(Level level, Appender appender) {
         this.level = level;
