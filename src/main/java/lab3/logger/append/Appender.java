@@ -30,5 +30,4 @@ public abstract class Appender {
     }
 
     public abstract void log(Level level, Class clazz, String message);
-
 }

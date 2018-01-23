@@ -18,6 +18,7 @@ public class ConsolAppender extends Appender {
         super(layout);
     }
 
+    @Override
     public void log(Level level, Class clazz, String message) {
         System.out.println(getLayout().messageBuilder(level, clazz, message));
     }

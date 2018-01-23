@@ -33,9 +33,9 @@ public class Config {
 
         List<AppenderLevel> levelApenderList1 = new ArrayList<>();
 
-        AppenderLevel levApp1 = new AppenderLevel(Level.WARN, new ConsolAppender(new Layout("%p %c %m %d")));
+        AppenderLevel levApp1 = new AppenderLevel(Level.WARN, new ConsolAppender(new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
 
-        AppenderLevel levApp2 = new AppenderLevel(Level.DEBUG, new FileAppender("log.txt", new Layout("%p %c %m %d")));
+        AppenderLevel levApp2 = new AppenderLevel(Level.DEBUG, new FileAppender("log.txt", new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
 
         levelApenderList1.add(levApp1);
         levelApenderList1.add(levApp2);

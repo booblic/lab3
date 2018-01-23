@@ -33,7 +33,7 @@ public class FileAppender extends Appender {
 
     public void log(Level level, Class clazz, String message) {
 
-        try(FileWriter fileWriter = new FileWriter(this.fileName)) {
+        try(FileWriter fileWriter = new FileWriter(this.fileName, true)) {
 
             fileWriter.write(getLayout().messageBuilder(level, clazz, message));
 
