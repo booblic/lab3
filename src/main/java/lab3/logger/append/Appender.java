@@ -3,61 +3,32 @@ package lab3.logger.append;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
-public class Appender {
-    public String nameAppender;
-    public Layout layout;
-    @XmlTransient
-    public Class cl;
-    public String fileName;
+@XmlSeeAlso({
+        ConsolAppender.class,
+        FileAppender.class
+})
+public abstract class Appender {
+    private Layout layout;
 
-    public Appender(String nameAppender, Layout layout) {
-        this.nameAppender = nameAppender;
+    public Appender(Layout layout) {
         this.layout = layout;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Appender getAppender() {
-        Appender appender = null;
-        try {
-            cl = Class.forName(this.nameAppender);
-
-            Constructor constructor = null;
-
-            if (cl.toString().compareTo("class lab3.logger.append.FileAppender") == 0) {
-                constructor = cl.getConstructor(Layout.class);
-                appender = (Appender) constructor.newInstance(layout);
-                return appender;
-            }
-
-            constructor = cl.getConstructor(Layout.class);
-
-            appender = (Appender) constructor.newInstance(layout);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return appender;
     }
 
     public Appender() {}
 
-    public void log(Level level, Class clazz, String message) {}
+    @XmlElement(name = "Layouts")
+    public void setLayout(Layout layout) {
+        this.layout = layout;
+    }
+
+    public Layout getLayout() {
+        return layout;
+    }
+
+    public abstract void log(Level level, Class clazz, String message);
 
 }

@@ -6,12 +6,11 @@ import lab3.logger.level.Level;
 
 
 public class Main {
-    private static final Logger logger = Logger.getLogger(Main.class);
+    private static final Logger logger = Logger.getLogger(Main.class, "config.xml");
     public static void main(String... args) {
         logger.log(Level.WARN, " System.out.println(\"Hellow world!\")");
         System.out.println("Hellow world!");
-        Test t = new Test();
-        t.test();
-
+        //Test t = new Test();
+        //t.test();
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Configurations>
+    <Configuration>
+        <Category>
+            <CategoryName>lab3.logger.main.Main</CategoryName>
+        </Category>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Layouts>
+                    <Layout>%p %c %m %d</Layout>
+                </Layouts>
+            </Appender>
+            <Level>WARN</Level>
+        </AppenderLevel>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Layouts>
+                    <Layout>%p %c %m %d</Layout>
+                </Layouts>
+            </Appender>
+            <Level>DEBUG</Level>
+        </AppenderLevel>
+    </Configuration>
+</Configurations>

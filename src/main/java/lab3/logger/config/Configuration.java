@@ -1,48 +1,39 @@
 package lab3.logger.config;
 
-import com.sun.xml.internal.txw2.annotation.XmlElement;
-import lab3.logger.LevelApender;
-import lab3.logger.append.*;
-import lab3.logger.append.ConsolAppender;
-import lab3.logger.categor.Categories;
-import lab3.logger.layout.Layout;
-import lab3.logger.level.Level;
-
+import lab3.logger.AppenderLevel;
+import lab3.logger.categor.Category;
 import javax.xml.bind.annotation.*;
 import java.util.*;
 
-@XmlType(propOrder = {"categories", "levelApenderList"})
+@XmlType(propOrder = {"category", "appenderLevelList"})
 public class Configuration {
 
-    public Categories categories;
+    private Category category;
 
-    public List<LevelApender> levelApenderList = new ArrayList<>();
-    //@XmlTransient
-    //public Map<Appender, Level> appenderLevel = new HashMap<>();
+    private List<AppenderLevel> appenderLevelList = new ArrayList<>();
 
-    public Configuration(String catecoriesName, List<LevelApender> levelApenderList) {
-        categories = new Categories(catecoriesName);
-        this.levelApenderList = levelApenderList;
+    public Configuration(String catecoryName, List<AppenderLevel> appenderLevel) {
+        category = new Category(catecoryName);
+        this.appenderLevelList = appenderLevel;
     }
 
-    /*public Configuration(String catecoriesName, Map<Appender, Level> appenderLevel) {
-        categories = new Categories(catecoriesName);
-        this.appenderLevel = appenderLevel;
-    }*/
+    public Configuration() {}
 
-    public Configuration(){}
-
-    //public static Map<String, Map<List<Level>, List<Appender>>> mapMap = new HashMap<>();
-
-    /*static {
-        Map<List<Level>, List<Appender>> m1 = new HashMap<>();
-        m1.put(new ArrayList<>(Arrays.asList(Level.WARN)), new ArrayList<>(Arrays.asList(new ConsolAppender(new Layout("%p %c %m %d")))));
-        mapMap.put("lab3.logger.main.Main", m1);
+    public Category getCategory() {
+        return category;
     }
 
-    static {
-        Map<List<Level>, List<Appender>> m2 = new HashMap<>();
-        m2.put(new ArrayList<>(Arrays.asList(Level.INFO)), new ArrayList<>(Arrays.asList(new ConsolAppender(new Layout("%p %c %m %d")))));
-        mapMap.put("lab3.logger", m2);
-    }*/
+    @XmlElement(name = "Category")
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<AppenderLevel> getAppenderLevelList() {
+        return appenderLevelList;
+    }
+
+    @XmlElement(name = "AppenderLevel")
+    public void setAppenderLevelList(List<AppenderLevel> appenderLevelList) {
+        this.appenderLevelList = appenderLevelList;
+    }
 }
