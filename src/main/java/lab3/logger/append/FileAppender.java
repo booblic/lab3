@@ -1,5 +1,6 @@
 package lab3.logger.append;
 
+import lab3.logger.filter.Filter;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
@@ -15,8 +16,8 @@ public class FileAppender extends Appender {
 
     private String fileName;
 
-    public FileAppender(String fileName, Layout layout) {
-        super(layout);
+    public FileAppender(String fileName, Layout layout, Filter... filter) {
+        super(layout, filter);
         this.fileName = fileName;
     }
 
@@ -33,14 +34,24 @@ public class FileAppender extends Appender {
 
     public void log(Level level, Class clazz, String message) {
 
-        try(FileWriter fileWriter = new FileWriter(this.fileName, true)) {
-
-            fileWriter.write(getLayout().messageBuilder(level, clazz, message));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Filter f: getFilter()) {
+            if (f.filter(level, clazz, message) == false) {
+                setFilterFlag(false);
+            }
         }
+
+        if (getFilterFlag()) {
+            try (FileWriter fileWriter = new FileWriter(this.fileName, true)) {
+
+                fileWriter.write(getLayout().messageBuilder(level, clazz, message));
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        setFilterFlag(true);
     }
 }

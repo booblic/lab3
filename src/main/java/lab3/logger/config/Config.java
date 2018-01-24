@@ -3,6 +3,9 @@ package lab3.logger.config;
 import lab3.logger.AppenderLevel;
 import lab3.logger.append.ConsolAppender;
 import lab3.logger.append.FileAppender;
+import lab3.logger.filter.ClassFilter;
+import lab3.logger.filter.LevelFilter;
+import lab3.logger.filter.MessageTextFilter;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
@@ -29,13 +32,13 @@ public class Config {
 
 
     public Config readConfig() {
-        String category1 = "lab3.logger.main.Main";
+        String category1 = "lab3.logger.main";
 
         List<AppenderLevel> levelApenderList1 = new ArrayList<>();
 
-        AppenderLevel levApp1 = new AppenderLevel(Level.WARN, new ConsolAppender(new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
+        AppenderLevel levApp1 = new AppenderLevel(Level.INFO, new ConsolAppender(new Layout("%p %d{H:m:s,Y.M.D} %c %m"), new LevelFilter("WARN"), new MessageTextFilter("message")));
 
-        AppenderLevel levApp2 = new AppenderLevel(Level.DEBUG, new FileAppender("log.txt", new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
+        AppenderLevel levApp2 = new AppenderLevel(Level.DEBUG, new FileAppender("log.txt", new Layout("%p %d{H:m:s,Y.M.D} %c %m"), new LevelFilter("INFO"), new MessageTextFilter("message")));
 
         levelApenderList1.add(levApp1);
         levelApenderList1.add(levApp2);
