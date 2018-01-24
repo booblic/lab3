@@ -12,7 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlSeeAlso({
         ConsolAppender.class,
-        FileAppender.class
+        FileAppender.class,
+        DataBaseAppender.class
 })
 public abstract class Appender {
     private Layout layout;

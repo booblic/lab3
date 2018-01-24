@@ -6,19 +6,39 @@
         </Category>
         <AppenderLevel>
             <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="LevelFilter">
+                    <Key>WARN</Key>
+                </Filter>
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>
                 <Layouts>
-                    <Layout>%p %c %m %d</Layout>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
                 </Layouts>
             </Appender>
-            <Level>WARN</Level>
+            <Level>INFO</Level>
         </AppenderLevel>
         <AppenderLevel>
             <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="LevelFilter">
+                    <Key>INFO</Key>
+                </Filter>
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>
                 <Layouts>
-                    <Layout>%p %c %m %d</Layout>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
                 </Layouts>
             </Appender>
             <Level>DEBUG</Level>
+        </AppenderLevel>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender" Password="123456" URL="jdbc:mysql://127.0.0.1:3306/mydatabase" UserName="kirill">
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                </Layouts>
+            </Appender>
+            <Level>TRACE</Level>
         </AppenderLevel>
     </Configuration>
 </Configurations>

@@ -21,6 +21,8 @@ public class MessageTextFilter extends Filter {
         }
     }
 
+    public MessageTextFilter() {}
+
     public boolean getInvert() {
         return invert;
     }

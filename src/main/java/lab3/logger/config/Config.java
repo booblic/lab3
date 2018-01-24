@@ -2,6 +2,7 @@ package lab3.logger.config;
 
 import lab3.logger.AppenderLevel;
 import lab3.logger.append.ConsolAppender;
+import lab3.logger.append.DataBaseAppender;
 import lab3.logger.append.FileAppender;
 import lab3.logger.filter.ClassFilter;
 import lab3.logger.filter.LevelFilter;
@@ -32,18 +33,21 @@ public class Config {
 
 
     public Config readConfig() {
-        String category1 = "lab3.logger.main";
+        String category1 = "lab3.logger.main.Main";
 
-        List<AppenderLevel> levelApenderList1 = new ArrayList<>();
+        List<AppenderLevel> appenderLevelList1 = new ArrayList<>();
 
         AppenderLevel levApp1 = new AppenderLevel(Level.INFO, new ConsolAppender(new Layout("%p %d{H:m:s,Y.M.D} %c %m"), new LevelFilter("WARN"), new MessageTextFilter("message")));
 
         AppenderLevel levApp2 = new AppenderLevel(Level.DEBUG, new FileAppender("log.txt", new Layout("%p %d{H:m:s,Y.M.D} %c %m"), new LevelFilter("INFO"), new MessageTextFilter("message")));
 
-        levelApenderList1.add(levApp1);
-        levelApenderList1.add(levApp2);
+        AppenderLevel levApp3 = new AppenderLevel(Level.TRACE, new DataBaseAppender("jdbc:mysql://127.0.0.1:3306/mydatabase", "kirill", "123456", new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
 
-        Configuration c1 = new Configuration(category1, levelApenderList1);
+        appenderLevelList1.add(levApp1);
+        appenderLevelList1.add(levApp2);
+        appenderLevelList1.add(levApp3);
+
+        Configuration c1 = new Configuration(category1, appenderLevelList1);
 
         configurations.add(c1);
 

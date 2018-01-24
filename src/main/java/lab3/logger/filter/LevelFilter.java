@@ -14,6 +14,8 @@ public class LevelFilter extends Filter {
         super(keyLevel);
     }
 
+    public LevelFilter() {}
+
     @Override
     public boolean filter(Level level, Class clazz, String message) {
         if (level.getLevelStr().compareTo(getKey()) == 0) {

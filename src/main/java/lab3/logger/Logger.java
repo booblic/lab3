@@ -39,7 +39,7 @@ public class Logger{
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            marshaller.marshal(new Config().readCondif(), new File("config.xml"));
+            marshaller.marshal(new Config().readConfig(), new File("config.xml"));
         } catch (JAXBException e) {
             e.printStackTrace();
         }*/
@@ -61,8 +61,10 @@ public class Logger{
             if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
 
                 for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
+                    //System.out.println(levelApender.getAppender());
                     appenderLevels.add(levelApender);
                 }
+                System.out.println(appenderLevels.size());
 
                 return new Logger(clazz, appenderLevels);
             }
@@ -153,6 +155,7 @@ public class Logger{
     public void log(Level level, String message) {
         SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
         for (AppenderLevel apenderLevel : la) {
+            System.out.println(apenderLevel.getAppender());
             apenderLevel.getAppender().log(level, clazz, message + " | " + "thread name: " + Thread.currentThread().getName());
         }
     }

@@ -22,6 +22,8 @@ public abstract class Filter {
         this.key = key;
     }
 
+    public Filter() {}
+
     public String getKey() {
         return key;
     }

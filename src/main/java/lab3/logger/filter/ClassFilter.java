@@ -13,6 +13,8 @@ public class ClassFilter extends Filter {
         super(keyClass);
     }
 
+    public ClassFilter() {}
+
     private String classNameToString(String className) {
         return className.substring(6, className.length());
     }
