@@ -16,6 +16,7 @@ public class DataBaseAppender extends Appender {
     private String url;
     private String userName;
     private String password;
+    private String driverClass;
 
     public DataBaseAppender(String url, String userName, String password, Layout layout, Filter... filter) {
         super(layout, filter);
@@ -53,11 +54,20 @@ public class DataBaseAppender extends Appender {
         this.password = password;
     }
 
+    @XmlAttribute(name = "DriverClass")
+    public String getDriverClass() {
+        return driverClass;
+    }
+
+    public void setDriverClass(String driverClass) {
+        this.driverClass = driverClass;
+    }
+
     @Override
     public void log(Level level, Class clazz, String message) {
         System.out.println("YYYY");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(driverClass);
             try(Connection connection = DriverManager.getConnection(url, userName, password)) {
                 System.out.println("Yess");
 

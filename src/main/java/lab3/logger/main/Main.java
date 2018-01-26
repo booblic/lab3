@@ -8,8 +8,8 @@ import java.io.IOException;
 
 
 public class Main {
-    //private static final Logger logger = Logger.getLogger(Main.class, "config.xml");
-    private static final Logger logger = Logger.getLogger(Main.class);
+    private static final Logger logger = Logger.getLogger(Main.class, "config.xml");
+//    private static final Logger logger = Logger.getLogger(Main.class);
     public static void main(String... args) {
         //logger.log(Level.WARN, "System.out.println(\"Hellow world!\")");
         logger.log(Level.ERROR, "System.out.println(\"Hellow world!\")");
