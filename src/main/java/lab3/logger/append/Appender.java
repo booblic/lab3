@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @XmlSeeAlso({
         ConsolAppender.class,
@@ -19,8 +21,6 @@ public abstract class Appender {
     private Layout layout;
 
     private Filter[] filter;
-
-    private boolean filterFlag = true;
 
     public Appender(Layout layout, Filter... filter) {
         this.layout = layout;
@@ -53,14 +53,21 @@ public abstract class Appender {
         this.filter = filter;
     }
 
-    public boolean getFilterFlag() {
-        return filterFlag;
+    protected String getPrintStacTrace(Throwable... exception) {
+
+        StringWriter sw = null;
+        String stackTrace = null;
+
+        if (exception.length != 0) {
+
+            sw = new StringWriter();
+            PrintWriter pw =new PrintWriter(sw);
+            exception[0].printStackTrace(pw);
+            stackTrace = sw.toString();
+        }
+
+        return stackTrace;
     }
 
-    @XmlTransient
-    public void setFilterFlag(boolean filterFlag) {
-        this.filterFlag = filterFlag;
-    }
-
-    public abstract void log(Level level, Class clazz, String message);
+    public abstract void log(Level level, Class clazz, String threadName, String message, Throwable... exception);
 }

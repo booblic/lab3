@@ -20,17 +20,12 @@ public class ConsolAppender extends Appender {
     }
 
     @Override
-    public void log(Level level, Class clazz, String message) {
+    public void log(Level level, Class clazz, String threadName, String message, Throwable... exception) {
         for (Filter f: getFilter()) {
-            if (f.filter(level, clazz, message) == false) {
-                setFilterFlag(false);
+            if (f.filter(level, clazz, threadName, message, exception) == false) {
+                return;
             }
         }
-
-        if (getFilterFlag()) {
-            System.out.println(getLayout().messageBuilder(level, clazz, message));
-        }
-
-        setFilterFlag(true);
+        System.out.println(getLayout().messageBuilder(level, clazz, threadName, message, getPrintStacTrace(exception)));
     }
 }

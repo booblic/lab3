@@ -12,12 +12,12 @@ import java.util.Objects;
 
 @XmlType(propOrder = {"appender", "level"})
 public class AppenderLevel implements Comparable<AppenderLevel> {
-    private Level level = Level.TRACE;
-    private Appender appender = new ConsolAppender(new Layout("%p %c %m %d"));
+    private Level level;
+    private Appender[] appenders;
 
-    public AppenderLevel(Level level, Appender appender) {
+    public AppenderLevel(Level level, Appender... appenders) {
         this.level = level;
-        this.appender = appender;
+        this.appenders = appenders;
     }
 
     public AppenderLevel() {}
@@ -32,13 +32,13 @@ public class AppenderLevel implements Comparable<AppenderLevel> {
         return level;
     }
 
-    public Appender getAppender() {
-        return appender;
+    public Appender[] getAppenders() {
+        return appenders;
     }
 
     @XmlElement(name = "Appender")
-    public void setAppender(Appender appender) {
-        this.appender = appender;
+    public void setAppenders(Appender... appenders) {
+        this.appenders = appenders;
     }
 
     @Override

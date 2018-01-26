@@ -2,43 +2,166 @@
 <Configurations>
     <Configuration>
         <Category>
-            <CategoryName>lab3.logger.main.Main</CategoryName>
+            <CategoryName>lab3.logger.main</CategoryName>
         </Category>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>System</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Level>WARN</Level>
+        </AppenderLevel>
         <AppenderLevel>
             <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
                 <Filter xsi:type="LevelFilter">
                     <Key>WARN</Key>
                 </Filter>
                 <Filter xsi:type="MessageTextFilter" Invert="false">
-                    <Key>message</Key>
+                    <Key>log</Key>
                 </Filter>
                 <Layouts>
-                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
                 </Layouts>
             </Appender>
             <Level>INFO</Level>
         </AppenderLevel>
+    </Configuration>
+    <Configuration>
+        <Category>
+            <CategoryName>lab3.logger.main</CategoryName>
+        </Category>
         <AppenderLevel>
-            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
-                <Filter xsi:type="LevelFilter">
-                    <Key>INFO</Key>
-                </Filter>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
                 <Filter xsi:type="MessageTextFilter" Invert="false">
                     <Key>message</Key>
                 </Filter>
                 <Layouts>
-                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator>|</Separator>
                 </Layouts>
             </Appender>
-            <Level>DEBUG</Level>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>System</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator>|</Separator>
+                </Layouts>
+            </Appender>
+            <Level>WARN</Level>
         </AppenderLevel>
         <AppenderLevel>
-            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender" Password="123456" URL="jdbc:mysql://127.0.0.1:3306/mydatabase" UserName="kirill">
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="LevelFilter">
+                    <Key>WARN</Key>
+                </Filter>
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>log</Key>
+                </Filter>
                 <Layouts>
-                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator>|</Separator>
                 </Layouts>
             </Appender>
-            <Level>TRACE</Level>
+            <Level>INFO</Level>
+        </AppenderLevel>
+    </Configuration>
+    <Configuration>
+        <Category>
+            <CategoryName>lab3.logger.main</CategoryName>
+        </Category>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>System</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Level>WARN</Level>
+        </AppenderLevel>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="LevelFilter">
+                    <Key>WARN</Key>
+                </Filter>
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>log</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Level>INFO</Level>
+        </AppenderLevel>
+    </Configuration>
+    <Configuration>
+        <Category>
+            <CategoryName>lab3.logger.Test</CategoryName>
+        </Category>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>System</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Level>WARN</Level>
+        </AppenderLevel>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
+                <Filter xsi:type="LevelFilter">
+                    <Key>WARN</Key>
+                </Filter>
+                <Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>log</Key>
+                </Filter>
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
+                    <Separator> | </Separator>
+                </Layouts>
+            </Appender>
+            <Level>INFO</Level>
         </AppenderLevel>
     </Configuration>
 </Configurations>

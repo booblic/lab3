@@ -10,15 +10,27 @@ import java.io.StringWriter;
 @XmlType(name = "LevelFilter")
 @XmlRootElement
 public class LevelFilter extends Filter {
+
+    private String keyLevel;
+
     public LevelFilter(String keyLevel) {
-        super(keyLevel);
+        this.keyLevel = keyLevel;
     }
 
     public LevelFilter() {}
 
+    public String getKeyLevel() {
+        return keyLevel;
+    }
+
+    @XmlElement(name = "KeyLevel")
+    public void setKeyLevel(String keyLevel) {
+        this.keyLevel = keyLevel;
+    }
+
     @Override
-    public boolean filter(Level level, Class clazz, String message) {
-        if (level.getLevelStr().compareTo(getKey()) == 0) {
+    public boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exeption) {
+        if (level.getLevelStr().compareTo(keyLevel) == 0) {
             return false;
         }
         return true;

@@ -1,8 +1,10 @@
 package lab3.logger;
 
+import lab3.logger.append.Appender;
 import lab3.logger.append.ConsolAppender;
 import lab3.logger.config.Config;
 import lab3.logger.config.Configuration;
+import lab3.logger.config.SingletonConfig;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
@@ -12,6 +14,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
@@ -24,10 +27,6 @@ public class Logger{
     private Logger(Class clazz, TreeSet<AppenderLevel> appenderLevels) {
         this.clazz = clazz;
         this.appenderLevels = appenderLevels;
-    }
-
-    private static String classNameToString(String className) {
-        return className.substring(6, className.length());
     }
 
     public static Logger getLogger(Class clazz) {
@@ -55,27 +54,10 @@ public class Logger{
             e.printStackTrace();
         }*/
 
-        String className = classNameToString(clazz.toString());
+        String className = clazz.getName();
 
-        for (Configuration configuration : new Config().readConfig().getConfigurations()) {
-            if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                    //System.out.println(levelApender.getAppender());
-                    appenderLevels.add(levelApender);
-                }
-                System.out.println(appenderLevels.size());
-
-                return new Logger(clazz, appenderLevels);
-            }
-
-            String cn = className;
-
-            while (className.contains(".")) {
-
-                className = className.substring(0, className.lastIndexOf("."));
-
-
+        try {
+            for (Configuration configuration : SingletonConfig.getConfig().readConfig().getConfigurations()) {
                 if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
 
                     for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
@@ -84,11 +66,30 @@ public class Logger{
 
                     return new Logger(clazz, appenderLevels);
                 }
+
+                String cn = className;
+
+                while (className.contains(".")) {
+
+                    className = className.substring(0, className.lastIndexOf("."));
+
+
+                    if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
+
+                        for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
+                            appenderLevels.add(levelApender);
+                        }
+
+                        return new Logger(clazz, appenderLevels);
+                    }
+                }
+                className = cn;
             }
-            className = cn;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        appenderLevels.add(new AppenderLevel());
+        appenderLevels.add(DefaultAppenderLevel.getDefaultAppenderLevel());
         return new Logger(clazz, appenderLevels);
     }
 
@@ -101,27 +102,26 @@ public class Logger{
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            marshaller.marshal(new Config().readCondif(), new File("config.xml"));
+            marshaller.marshal(SingletonConfig.getConfig().readConfig(), new File("config.xml"));
         } catch (JAXBException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        Config configUnmarshl = null;
+        Config configUnmarsh = null;
 
         try {
             JAXBContext context = JAXBContext.newInstance(Config.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            configUnmarshl = (Config) unmarshaller.unmarshal(new File(fileConfigName));
+            configUnmarsh = (Config) unmarshaller.unmarshal(new File(fileConfigName));
         } catch (JAXBException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        String className = classNameToString(clazz.toString());
+        String className = clazz.getName();
 
-        for (Configuration configuration : configUnmarshl.getConfigurations()) {
+        for (Configuration configuration : SingletonConfig.getConfig(fileConfigName).getConfigurations()) {
             if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
                 for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
                     appenderLevels.add(levelApender);
                 }
@@ -148,28 +148,19 @@ public class Logger{
             className = cn;
         }
 
-        appenderLevels.add(new AppenderLevel());
+        appenderLevels.add(DefaultAppenderLevel.getDefaultAppenderLevel());
         return new Logger(clazz, appenderLevels);
     }
 
-    public void log(Level level, String message) {
+    public void log(Level level, String message, Throwable... exception) {
         SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
+
+        String threadName = Thread.currentThread().getName();
+
         for (AppenderLevel apenderLevel : la) {
-            System.out.println(apenderLevel.getAppender());
-            apenderLevel.getAppender().log(level, clazz, message + " | " + "thread name: " + Thread.currentThread().getName());
+            for (Appender appender: apenderLevel.getAppenders()) {
+                appender.log(level, clazz, threadName, message, exception);
+            }
         }
     }
-
-    public void log(Level level, String message, Throwable exeption) {
-        SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
-        for (AppenderLevel apenderLevel : la) {
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw =new PrintWriter(sw);
-            exeption.printStackTrace(pw);
-
-            apenderLevel.getAppender().log(level, clazz, message + " | " + "thread name: " + Thread.currentThread().getName() + "\n" + sw);
-        }
-    }
-
 }

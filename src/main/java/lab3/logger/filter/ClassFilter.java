@@ -9,19 +9,27 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ClassFilter")
 @XmlRootElement
 public class ClassFilter extends Filter {
+
+    private String keyClass;
+
     public ClassFilter(String keyClass) {
-        super(keyClass);
+        this.keyClass = keyClass;
     }
 
     public ClassFilter() {}
 
-    private String classNameToString(String className) {
-        return className.substring(6, className.length());
+    public String getKeyClass() {
+        return keyClass;
+    }
+
+    @XmlElement(name = "KeyClass")
+    public void setKeyClass(String keyClass) {
+        this.keyClass = keyClass;
     }
 
     @Override
-    public boolean filter(Level level, Class clazz, String message) {
-        if (classNameToString(clazz.toString()).compareTo(getKey()) == 0) {
+    public boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exeption) {
+        if (clazz.getName().compareTo(keyClass) == 0) {
             return false;
         }
         return true;

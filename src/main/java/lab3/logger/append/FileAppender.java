@@ -16,12 +16,18 @@ public class FileAppender extends Appender {
 
     private String fileName;
 
-    public FileAppender(String fileName, Layout layout, Filter... filter) {
+    File file;
+    FileWriter fileWriter;
+
+    public FileAppender(String fileName, Layout layout, Filter... filter) throws IOException {
         super(layout, filter);
-        this.fileName = fileName;
+        file = new File(fileName);
+        fileWriter = new FileWriter(file, true);
+        MyShutdownHook myShutdownHook = new MyShutdownHook();
+        Runtime.getRuntime().addShutdownHook(myShutdownHook);
     }
 
-    public FileAppender() {}
+    public FileAppender() throws IOException {}
 
     @XmlAttribute(name = "FileName")
     public void setFileName(String fileName) {
@@ -32,26 +38,36 @@ public class FileAppender extends Appender {
         return fileName;
     }
 
-    public void log(Level level, Class clazz, String message) {
+    public void log(Level level, Class clazz, String threadName, String message, Throwable... exception) {
 
         for (Filter f: getFilter()) {
-            if (f.filter(level, clazz, message) == false) {
-                setFilterFlag(false);
+            if (f.filter(level, clazz, threadName, message, exception) == false) {
+                return;
             }
         }
 
-        if (getFilterFlag()) {
-            try (FileWriter fileWriter = new FileWriter(this.fileName, true)) {
+        try {
 
-                fileWriter.write(getLayout().messageBuilder(level, clazz, message));
+            fileWriter.write(getLayout().messageBuilder(level, clazz, threadName, message, getPrintStacTrace(exception)));
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        setFilterFlag(true);
+    private class MyShutdownHook extends Thread {
+        public void run() {
+            shutdown();
+        }
+    }
+
+    private void shutdown() {
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

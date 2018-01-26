@@ -10,10 +10,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "MessageTextFilter")
 @XmlRootElement
 public class MessageTextFilter extends Filter {
+
+    private String keyWord;
+
     private boolean invert;
 
-    public MessageTextFilter(String keyString, boolean... invert) {
-        super(keyString);
+    public MessageTextFilter(String keyWord, boolean... invert) {
+        this.keyWord = keyWord;
         if (invert.length != 0) {
             this.invert = invert[0];
         } else {
@@ -22,6 +25,15 @@ public class MessageTextFilter extends Filter {
     }
 
     public MessageTextFilter() {}
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    @XmlElement(name = "KeyWord")
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
+    }
 
     public boolean getInvert() {
         return invert;
@@ -33,11 +45,10 @@ public class MessageTextFilter extends Filter {
     }
 
     @Override
-    public boolean filter(Level level, Class clazz, String message) {
-        for (String s: message.split(" ")) {
-            if (s.compareTo(getKey()) == 0) {
-                return false;
-            }
+    public boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exeption) {
+
+        if (message.indexOf(keyWord) == 0) {
+            return false;
         }
         return true;
     }

@@ -2,6 +2,7 @@ package lab3.logger.layout;
 
 import lab3.logger.level.Level;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.text.SimpleDateFormat;
@@ -13,8 +14,14 @@ public class Layout {
 
     private String layout;
 
-    public Layout(String layout) {
+    private String separator;
+
+    public Layout(String layout, String... separator) {
         this.layout = layout;
+        if (separator.length == 0) {
+            this.separator = "|";
+        }
+        this.separator = separator[0];
     }
 
     public Layout() {}
@@ -28,7 +35,16 @@ public class Layout {
         return layout;
     }
 
-    public String messageBuilder(Level level, Class clazz, String message) {
+    public String getSeparator() {
+        return separator;
+    }
+
+    @XmlElement(name = "Separator")
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
+    public String messageBuilder(Level level, Class clazz, String threadName, String message, String... stackTrace) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String l: layout.split(" ")) {
@@ -48,20 +64,28 @@ public class Layout {
             switch (l) {
                 case "%d":
                     SimpleDateFormat date = new SimpleDateFormat(formatDate);
-                    stringBuilder.append(" | " + date.format(new Date()));
+                    stringBuilder.append(separator + "Date: " + date.format(new Date()));
                     break;
 
                 case "%p":
-                    stringBuilder.append(" [" + level.getLevelStr() + "]");
+                    stringBuilder.append(separator + "Level: " + level.getLevelStr());
                     break;
 
                 case "%c":
-                    stringBuilder.append(" | " + clazz);
+                    stringBuilder.append(separator + "Class: " + clazz.getName());
                     break;
 
                 case "%m":
-                    stringBuilder.append(" | " + message);
+                    stringBuilder.append(separator + "Message: " + message);
                     break;
+                case "%t":
+                    stringBuilder.append(separator + "Thread name: " + threadName);
+                    break;
+                case "%s":
+                    if (stackTrace[0] != null) {
+                        stringBuilder.append("\n" + "Stack trace: " + stackTrace[0]);
+                        break;
+                    }
             }
         }
         return stringBuilder.toString().trim() + "\n";

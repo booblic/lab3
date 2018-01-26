@@ -54,16 +54,19 @@ public class DataBaseAppender extends Appender {
     }
 
     @Override
-    public void log(Level level, Class clazz, String message) {
-        System.out.println("YYYY");
+    public void log(Level level, Class clazz, String threadName, String message, Throwable... exception) {
+        for (Filter f: getFilter()) {
+            if (f.filter(level, clazz, threadName, message, exception) == false) {
+                return;
+            }
+        }
         try {
             Class.forName("com.mysql.jdbc.Driver");
             try(Connection connection = DriverManager.getConnection(url, userName, password)) {
-                System.out.println("Yess");
 
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO log_table(log) VALUES(?)");
 
-                preparedStatement.setString(1, getLayout().messageBuilder(level, clazz, message));
+                preparedStatement.setString(1, getLayout().messageBuilder(level, clazz, threadName, message, getPrintStacTrace(exception)));
 
                 preparedStatement.executeUpdate();
 

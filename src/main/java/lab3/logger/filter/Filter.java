@@ -10,28 +10,15 @@ import java.io.StringWriter;
 
 @XmlSeeAlso({
         MessageTextFilter.class,
-        //ExceptionTextFilter.class,
+        ExceptionTextFilter.class,
         LevelFilter.class,
         ClassFilter.class,
-        DefaultFilter.class
+        DefaultFilter.class,
+        ThreadFilter.class
 })
 public abstract class Filter {
-    private String key;
-
-    public Filter(String key) {
-        this.key = key;
-    }
 
     public Filter() {}
 
-    public String getKey() {
-        return key;
-    }
-
-    @XmlElement(name = "Key")
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public abstract boolean filter(Level level, Class clazz, String message);
+    public abstract boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exeption);
 }
