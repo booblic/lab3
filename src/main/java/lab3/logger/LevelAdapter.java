@@ -16,6 +16,6 @@ public class LevelAdapter extends XmlAdapter<String, Level> {
 
     @Override
     public String marshal(Level v) throws Exception {
-        return v.getLevelStr();
+        return v.levelStr;
     }
 }

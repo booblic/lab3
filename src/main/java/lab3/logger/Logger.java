@@ -1,175 +1,70 @@
 package lab3.logger;
 
+import lab3.logger.append.Appender;
 import lab3.logger.append.ConsolAppender;
-import lab3.logger.config.Config;
 import lab3.logger.config.Configuration;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Logger{
+    public List<Appender> appenders;
+    public List<Level> levels;
     Class clazz;
 
-    private TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+    private TreeSet<LevelApender> levelApenders;
 
-    private Logger(Class clazz, TreeSet<AppenderLevel> appenderLevels) {
+    private Logger(List<Level> levels, List<Appender> appenders, Class clazz) {
+        this.levels = levels;
+        this.appenders = appenders;
         this.clazz = clazz;
-        this.appenderLevels = appenderLevels;
-    }
-
-    private static String classNameToString(String className) {
-        return className.substring(6, className.length());
     }
 
     public static Logger getLogger(Class clazz) {
 
-        TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+        if (Configuration.mapMap.containsKey(clazz.toString())) {
+            Map<List<Level>, List<Appender>> map = Configuration.mapMap.get(clazz.toString());
 
-        /*try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            List<Level> levelList = null;
+            List<Appender> appenderList = null;
 
-            marshaller.marshal(new Config().readConfig(), new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }*/
-
-        /*Config configUnmarshl = null;
-
-        try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            configUnmarshl = (Config) unmarshaller.unmarshal(new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }*/
-
-        String className = classNameToString(clazz.toString());
-
-        for (Configuration configuration : new Config().readConfig().getConfigurations()) {
-            if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                    //System.out.println(levelApender.getAppender());
-                    appenderLevels.add(levelApender);
-                }
-                System.out.println(appenderLevels.size());
-
-                return new Logger(clazz, appenderLevels);
+            for (Map.Entry<List<Level>, List<Appender>> param: map.entrySet()) {
+               levelList = param.getKey();
+               appenderList = param.getValue();
             }
-
-            String cn = className;
-
-            while (className.contains(".")) {
-
-                className = className.substring(0, className.lastIndexOf("."));
-
-
-                if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                    for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                        appenderLevels.add(levelApender);
-                    }
-
-                    return new Logger(clazz, appenderLevels);
-                }
-            }
-            className = cn;
+            return new Logger(levelList, appenderList, clazz);
         }
 
-        appenderLevels.add(new AppenderLevel());
-        return new Logger(clazz, appenderLevels);
-    }
+        String str = clazz.toString();
 
-    public static Logger getLogger(Class clazz, String fileConfigName) {
+        while (str.contains(".")) {
+            str = str.substring(0, str.lastIndexOf("."));
+            if (Configuration.mapMap.containsKey(str)) {
+                Map<List<Level>, List<Appender>> map = Configuration.mapMap.get(str);
 
-        TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+                List<Level> levelList = null;
+                List<Appender> appenderList = null;
 
-        /*try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            marshaller.marshal(new Config().readCondif(), new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }*/
-
-        Config configUnmarshl = null;
-
-        try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            configUnmarshl = (Config) unmarshaller.unmarshal(new File(fileConfigName));
-        } catch (JAXBException e) {
-            e.printStackTrace();
+                for (Map.Entry<List<Level>, List<Appender>> param: map.entrySet()) {
+                    levelList = param.getKey();
+                    appenderList = param.getValue();
+                }
+                return new Logger(levelList, appenderList, clazz);
+            }
         }
 
-        String className = classNameToString(clazz.toString());
-
-        for (Configuration configuration : configUnmarshl.getConfigurations()) {
-            if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                    appenderLevels.add(levelApender);
-                }
-
-                return new Logger(clazz, appenderLevels);
-            }
-
-            String cn = className;
-
-            while (className.contains(".")) {
-
-                className = className.substring(0, className.lastIndexOf("."));
-
-
-                if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                    for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                        appenderLevels.add(levelApender);
-                    }
-
-                    return new Logger(clazz, appenderLevels);
-                }
-            }
-            className = cn;
-        }
-
-        appenderLevels.add(new AppenderLevel());
-        return new Logger(clazz, appenderLevels);
+        return new Logger(Arrays.asList(Level.INFO), Arrays.asList(new ConsolAppender(new Layout("defualt format"))), Object.class);
     }
 
     public void log(Level level, String message) {
-        SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
-        for (AppenderLevel apenderLevel : la) {
-            System.out.println(apenderLevel.getAppender());
-            apenderLevel.getAppender().log(level, clazz, message + " | " + "thread name: " + Thread.currentThread().getName());
+        SortedSet<LevelApender> la = levelApenders.tailSet(new LevelApender(level, null), true);
+        for (LevelApender levelApender : la) {
+            levelApender.getAppender().log(level, clazz, message);
         }
     }
-
-    public void log(Level level, String message, Throwable exeption) {
-        SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
-        for (AppenderLevel apenderLevel : la) {
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw =new PrintWriter(sw);
-            exeption.printStackTrace(pw);
-
-            apenderLevel.getAppender().log(level, clazz, message + " | " + "thread name: " + Thread.currentThread().getName() + "\n" + sw);
-        }
-    }
-
 }

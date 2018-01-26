@@ -1,9 +1,9 @@
 package lab3.logger.main;
 
-import lab3.logger.AppenderLevel;
+import lab3.logger.LevelApender;
 import lab3.logger.append.ConsolAppender;
-import lab3.logger.categor.Category;
-import lab3.logger.config.Config;
+import lab3.logger.categor.Categories;
+import lab3.logger.config.Conf;
 import lab3.logger.config.Configuration;
 import lab3.logger.level.Level;
 
@@ -17,23 +17,23 @@ import java.io.OutputStreamWriter;
  * @since 22.01.2018
  */
 public class ConfigurationTest {
-    /*public static void main(String[] args) {
-        Config conf = new Config();
+    public static void main(String[] args) {
+        Conf conf = new Conf();
         Configuration configuration = new Configuration();
         conf.configurations.add(configuration);
 
-        configuration.category = new Category();
-        configuration.category.setCategoryName("a.b.c");
+        configuration.categories = new Categories();
+        configuration.categories.setCategoriesName("a.b.c");
 
-        AppenderLevel appenderLeve = new AppenderLevel(Level.TRACE, new ConsolAppender());
-        configuration.appenderLevelList.add(appenderLeve);
+        LevelApender levelApender = new LevelApender(Level.TRACE, new ConsolAppender());
+        configuration.levelApenderList.add(levelApender);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         JAXB.marshal(conf, out);
 
         System.out.println(out.toString());
 
-        Config conf2 = JAXB.unmarshal(new ByteArrayInputStream(out.toByteArray()), Config.class);
+        Conf conf2 = JAXB.unmarshal(new ByteArrayInputStream(out.toByteArray()), Conf.class);
         System.out.println("conf2 = " + conf2);
-    }*/
+    }
 }
