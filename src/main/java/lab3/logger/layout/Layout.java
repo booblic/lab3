@@ -12,27 +12,28 @@ import java.util.regex.Pattern;
 
 public class Layout {
 
-    private String layout;
+    private String layouts;
 
     private String separator;
 
-    public Layout(String layout, String... separator) {
-        this.layout = layout;
+    public Layout(String layouts, String... separator) {
+        this.layouts = layouts;
         if (separator.length == 0) {
             this.separator = "|";
+        } else {
+            this.separator = separator[0];
         }
-        this.separator = separator[0];
     }
 
     public Layout() {}
 
     @XmlElement(name = "Layout")
-    public void setLayout(String layout) {
-        this.layout = layout;
+    public void setLayouts(String layout) {
+        this.layouts = layout;
     }
 
-    public String getLayout() {
-        return layout;
+    public String getLayouts() {
+        return layouts;
     }
 
     public String getSeparator() {
@@ -47,21 +48,21 @@ public class Layout {
     public String messageBuilder(Level level, Class clazz, String threadName, String message, String... stackTrace) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (String l: layout.split(" ")) {
+        for (String layout: layouts.split(" ")) {
 
             String formatDate = null;
 
             Pattern p = Pattern.compile("\\%d\\{");
-            Matcher m = p.matcher(l);
+            Matcher m = p.matcher(layout);
 
             if (m.find()) {
-                formatDate = l.substring(3, l.length() - 1);
-                l = l.substring(0, 2);
+                formatDate = layout.substring(3, layout.length() - 1);
+                layout = layout.substring(0, 2);
             } else {
-                formatDate = "d.m.y-H:m:s";
+                formatDate = "d.m.y--H:m:s";
             }
 
-            switch (l) {
+            switch (layout) {
                 case "%d":
                     SimpleDateFormat date = new SimpleDateFormat(formatDate);
                     stringBuilder.append(separator + "Date: " + date.format(new Date()));

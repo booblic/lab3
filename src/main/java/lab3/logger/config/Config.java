@@ -52,10 +52,10 @@ public class Config {
 
         AppenderLevel levApp2 = new AppenderLevel(
                 Level.INFO,
-                new FileAppender(
-                        "log1.txt",
-                        new Layout("%p %d{H:m:s,Y.M.D} %c %m %t %s", "|"),
-                        new MessageTextFilter("System")));
+                    new DataBaseAppender("jdbc:mysql://localhost:3306/mydatabase", "kirill", "123456",
+                            "com.mysql.jdbc.Driver",
+                            "INSERT INTO log_table(date, level, class, thread, message, stacktrace) VALUES(?, ?, ?, ?, ?, ?)",
+                            new Layout("%d{H:m:s,Y.M.D} %p %c %t %m %s")));
 
         //AppenderLevel levApp3 = new AppenderLevel(Level.TRACE, new DataBaseAppender("jdbc:mysql://127.0.0.1:3306/mydatabase", "kirill", "123456", new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
 
