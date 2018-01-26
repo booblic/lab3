@@ -41,6 +41,8 @@ public class Logger{
             marshaller.marshal(new Config().readConfig(), new File("config.xml"));
         } catch (JAXBException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }*/
 
         /*Config configUnmarshl = null;
@@ -104,6 +106,8 @@ public class Logger{
 
             marshaller.marshal(SingletonConfig.getConfig().readConfig(), new File("config.xml"));
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

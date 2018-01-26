@@ -18,6 +18,8 @@ public class ExceptionTextFilter extends Filter {
         this.keyException = keyException;
     }
 
+    public ExceptionTextFilter() {}
+
     public String getKeyException() {
         return keyException;
     }

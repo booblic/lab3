@@ -23,7 +23,11 @@ public abstract class Appender {
     private Filter[] filter;
 
     public Appender(Layout layout, Filter... filter) {
-        this.layout = layout;
+        if (layout == null) {
+            this.layout = new Layout("%p %d{H:m:s,Y.M.D} %c %m %t %s");
+        } else {
+            this.layout = layout;
+        }
         if (filter.length != 0) {
             this.filter = filter;
         } else {

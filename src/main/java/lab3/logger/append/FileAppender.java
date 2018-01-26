@@ -4,10 +4,7 @@ import lab3.logger.filter.Filter;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.*;
 
 @XmlType(name = "FileAppender")
@@ -18,12 +15,15 @@ public class FileAppender extends Appender {
 
     File file;
     FileWriter fileWriter;
+    MyShutdownHook myShutdownHook;
+
 
     public FileAppender(String fileName, Layout layout, Filter... filter) throws IOException {
         super(layout, filter);
+        this.fileName = fileName;
         file = new File(fileName);
         fileWriter = new FileWriter(file, true);
-        MyShutdownHook myShutdownHook = new MyShutdownHook();
+        myShutdownHook = new MyShutdownHook();
         Runtime.getRuntime().addShutdownHook(myShutdownHook);
     }
 
@@ -47,6 +47,13 @@ public class FileAppender extends Appender {
         }
 
         try {
+
+            if (file == null && fileWriter == null) {
+                file = new File(fileName);
+                fileWriter = new FileWriter(file, true);
+                myShutdownHook = new MyShutdownHook();
+                Runtime.getRuntime().addShutdownHook(myShutdownHook);
+            }
 
             fileWriter.write(getLayout().messageBuilder(level, clazz, threadName, message, getPrintStacTrace(exception)));
 

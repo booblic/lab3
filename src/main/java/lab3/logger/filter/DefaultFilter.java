@@ -2,9 +2,12 @@ package lab3.logger.filter;
 
 import lab3.logger.level.Level;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlTransient
+@XmlType(name = "DefaultFilter")
+@XmlRootElement
 public class DefaultFilter extends Filter {
 
     public DefaultFilter(String defaultKey) {}

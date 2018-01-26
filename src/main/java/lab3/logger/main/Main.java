@@ -8,8 +8,8 @@ import java.io.IOException;
 
 
 public class Main {
-    //private static final Logger logger = Logger.getLogger(Main.class, "config.xml");
-    private static final Logger logger = Logger.getLogger(Main.class);
+    private static final Logger logger = Logger.getLogger(Main.class, "config.xml");
+    //private static final Logger logger = Logger.getLogger(Main.class);
     public static void main(String... args) {
         //logger.log(Level.WARN, "sout");
         logger.log(Level.WARN, "vasia");
@@ -19,7 +19,7 @@ public class Main {
             throw new IOException();
         } catch (IOException e) {
             e.printStackTrace();
-            logger.log(Level.WARN, "exeption!", e);
+            //logger.log(Level.WARN, "exeption!", e);
             //logger.log(Level.ERROR, "my message", e);
         }
         //Test t = new Test();

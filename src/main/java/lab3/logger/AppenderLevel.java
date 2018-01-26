@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
-@XmlType(propOrder = {"appender", "level"})
+@XmlType(propOrder = {"appenders", "level"})
 public class AppenderLevel implements Comparable<AppenderLevel> {
     private Level level;
     private Appender[] appenders;

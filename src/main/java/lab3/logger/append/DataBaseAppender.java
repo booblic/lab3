@@ -20,8 +20,7 @@ public class DataBaseAppender extends Appender {
     private String password;
     private String driver;
     private String sqlRequest;
-    @XmlTransient
-    private String columnOrder;
+    //private String columnOrder;
 
     public DataBaseAppender(String url, String userName, String password, String driver, String sqlRequest, Layout layout, Filter... filter) {
         super(layout, filter);
@@ -30,7 +29,7 @@ public class DataBaseAppender extends Appender {
         this.password = password;
         this.driver = driver;
         this.sqlRequest = sqlRequest;
-        columnOrder = getLayout().getLayouts();
+        //this.columnOrder = columnOrder;
     }
 
     public DataBaseAppender() {}
@@ -80,6 +79,17 @@ public class DataBaseAppender extends Appender {
         this.sqlRequest = sqlRequest;
     }
 
+
+    /*public String getColumnOrder() {
+        return columnOrder;
+    }
+
+    @XmlElement(name = "ColumnOrder")
+    public void setColumnOrder(String columnOrder) {
+        this.columnOrder = columnOrder;
+    }*/
+
+
     @Override
     public void log(Level level, Class clazz, String threadName, String message, Throwable... exception) {
         for (Filter f: getFilter()) {
@@ -95,7 +105,7 @@ public class DataBaseAppender extends Appender {
 
                 int i = 1;
 
-                for (String layout: columnOrder.split(" ")) {
+                for (String layout: getLayout().getLayouts().split(" ")) {
 
                     String formatDate = null;
                     Pattern p = Pattern.compile("\\%d\\{");

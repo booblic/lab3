@@ -16,6 +16,8 @@ public class ThreadFilter extends Filter {
         this.keyThreadName = keyThreadName;
     }
 
+    public ThreadFilter() {}
+
     public String getKeyThreadName() {
         return keyThreadName;
     }

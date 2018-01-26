@@ -45,8 +45,7 @@ public class Config {
                             new MessageTextFilter("123"),
                             new LevelFilter("ERROR"),
                             new ExceptionTextFilter("NullPointerException")),
-                    new FileAppender(
-                            "log.txt",
+                    new FileAppender("log.txt",
                             new Layout("%p %d{H:m:s,Y.M.D} %c %m %t %s", "|"),
                             new MessageTextFilter("System")));
 
