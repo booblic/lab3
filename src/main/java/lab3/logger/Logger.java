@@ -2,156 +2,69 @@ package lab3.logger;
 
 import lab3.logger.append.Appender;
 import lab3.logger.append.ConsolAppender;
-import lab3.logger.config.Config;
 import lab3.logger.config.Configuration;
-import lab3.logger.config.SingletonConfig;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
-
-/**
- * Класс, предстваляющий логер
- * @author Кирилл
- * @version 1.0
- */
 public class Logger{
-
-    /**
-     * Класс для которого создается логер
-     */
+    public List<Appender> appenders;
+    public List<Level> levels;
     Class clazz;
 
-    /**
-     * Коллекция аппендеров с соответсувующими им уровнями
-     */
-    private TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+    private TreeSet<LevelApender> levelApenders;
 
-    /**
-     * Конструктор класса Logger
-     * @param clazz - класс для которого создается логер
-     * @param appenderLevels - коллекция аппендеров с соответсувующими им уровнями
-     */
-    private Logger(Class clazz, TreeSet<AppenderLevel> appenderLevels) {
+    private Logger(List<Level> levels, List<Appender> appenders, Class clazz) {
+        this.levels = levels;
+        this.appenders = appenders;
         this.clazz = clazz;
-        this.appenderLevels = appenderLevels;
     }
 
-    /**
-     * Статический метод для создания логера на основе конфигураций (созданных на основе Java кода)
-     * @param clazz - класс для которого создается логер
-     * @return готовый логер
-     */
     public static Logger getLogger(Class clazz) {
 
-        TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+        if (Configuration.mapMap.containsKey(clazz.toString())) {
+            Map<List<Level>, List<Appender>> map = Configuration.mapMap.get(clazz.toString());
 
-        String className = clazz.getName();
+            List<Level> levelList = null;
+            List<Appender> appenderList = null;
 
-        try {
-            for (Configuration configuration : SingletonConfig.getConfig().readConfig().getConfigurations()) {
-                if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                    for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                        appenderLevels.add(levelApender);
-                    }
-
-                    return new Logger(clazz, appenderLevels);
-                }
-
-                String cn = className;
-
-                while (className.contains(".")) {
-
-                    className = className.substring(0, className.lastIndexOf("."));
-
-
-                    if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                        for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                            appenderLevels.add(levelApender);
-                        }
-
-                        return new Logger(clazz, appenderLevels);
-                    }
-                }
-                className = cn;
+            for (Map.Entry<List<Level>, List<Appender>> param: map.entrySet()) {
+               levelList = param.getKey();
+               appenderList = param.getValue();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return new Logger(levelList, appenderList, clazz);
         }
 
-        appenderLevels.add(DefaultAppenderLevel.getDefaultAppenderLevel());
-        return new Logger(clazz, appenderLevels);
-    }
+        String str = clazz.toString();
 
-    /**
-     * Статический метод для создания логера на основе конфигураций (созданных на основе XML файла)
-     * @param clazz - класс для которого создается логер
-     * @return готовый логер
-     */
-    public static Logger getLogger(Class clazz, String fileConfigName) {
+        while (str.contains(".")) {
+            str = str.substring(0, str.lastIndexOf("."));
+            if (Configuration.mapMap.containsKey(str)) {
+                Map<List<Level>, List<Appender>> map = Configuration.mapMap.get(str);
 
-        TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
+                List<Level> levelList = null;
+                List<Appender> appenderList = null;
 
-        String className = clazz.getName();
-
-        for (Configuration configuration : SingletonConfig.getConfig(fileConfigName).getConfigurations()) {
-            if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-                for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                    appenderLevels.add(levelApender);
+                for (Map.Entry<List<Level>, List<Appender>> param: map.entrySet()) {
+                    levelList = param.getKey();
+                    appenderList = param.getValue();
                 }
-
-                return new Logger(clazz, appenderLevels);
+                return new Logger(levelList, appenderList, clazz);
             }
-
-            String cn = className;
-
-            while (className.contains(".")) {
-
-                className = className.substring(0, className.lastIndexOf("."));
-
-
-                if (configuration.getCategory().getCategoryName().compareTo(className) == 0) {
-
-                    for (AppenderLevel levelApender: configuration.getAppenderLevelList()) {
-                        appenderLevels.add(levelApender);
-                    }
-
-                    return new Logger(clazz, appenderLevels);
-                }
-            }
-            className = cn;
         }
 
-        appenderLevels.add(DefaultAppenderLevel.getDefaultAppenderLevel());
-        return new Logger(clazz, appenderLevels);
+        return new Logger(Arrays.asList(Level.INFO), Arrays.asList(new ConsolAppender(new Layout("defualt format"))), Object.class);
     }
 
-    /**
-     * Метод вызываемый для логирования, в нем выбираются аппендеры данного логера, которым нужно отправить лог
-     * @param level - уровень логирования
-     * @param message - сообщение пользователя
-     * @param exception - исключение
-     */
-    public void log(Level level, String message, Throwable... exception) {
-        SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
-
-        String threadName = Thread.currentThread().getName();
-
-        for (AppenderLevel apenderLevel : la) {
-            for (Appender appender: apenderLevel.getAppenders()) {
-                appender.log(level, clazz, threadName, message, exception);
-            }
+    public void log(Level level, String message) {
+        SortedSet<LevelApender> la = levelApenders.tailSet(new LevelApender(level, null), true);
+        for (LevelApender levelApender : la) {
+            levelApender.getAppender().log(level, clazz, message);
         }
     }
 }

@@ -1,124 +1,68 @@
 package lab3.logger.append;
 
-import lab3.logger.filter.DefaultFilter;
-import lab3.logger.filter.Filter;
 import lab3.logger.layout.Layout;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
-/**
- * Абстрактный класс, точка иерархии всех аппендеров
- * @author Кирилл
- * @version 1.0
- */
 @XmlSeeAlso({
-        ConsolAppender.class,
-        FileAppender.class,
-        DataBaseAppender.class
+        ConsolAppender.class
 })
 public abstract class Appender {
+    public String nameAppender;
+    public Layout layout;
 
-    /**
-     * Шаблон лога аппендера
-     */
-    private Layout layout;
+    @XmlTransient
+    public Class cl;
+    public String fileName;
 
-    /**
-     * Массив фильтров аппендера
-     */
-    private Filter[] filter;
-
-    /**
-     * Конструктор аппедера
-     * @param layout - шаблон лога аппендера
-     * @param filter - массив фильтров аппендера
-     */
-    public Appender(Layout layout, Filter... filter) {
-        if (layout == null) {
-            this.layout = new Layout("%p %d{H:m:s,Y.M.D} %c %m %t %s");
-        } else {
-            this.layout = layout;
-        }
-        if (filter.length != 0) {
-            this.filter = filter;
-        } else {
-            Filter[] f = new Filter[1];
-            f[0] = new DefaultFilter("");
-            this.filter = f;
-        }
-    }
-
-    /**
-     * Конструктор по-умолчанию, для рефлексивного создания объекта после анмаршлинга
-     */
-    public Appender() {}
-
-    /**
-     * Сеттер шаблона аппендера
-     * @param layout - шаблон лога аппендера
-     */
-    @XmlElement(name = "Layouts")
-    public void setLayout(Layout layout) {
+    public Appender(String nameAppender, Layout layout) {
+        this.nameAppender = nameAppender;
         this.layout = layout;
     }
 
-    /**
-     * Геттер шаблона аппендера
-     * @return layout - шаблон лога аппендера
-     */
-    public Layout getLayout() {
-        return layout;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    /**
-     * Геттер массива фильтров аппендера
-     * @return filter - массив фильтров аппендера
-     */
-    public Filter[] getFilter() {
-        return filter;
-    }
+    public Appender getAppender() {
+        Appender appender = null;
+        try {
+            cl = Class.forName(this.nameAppender);
 
-    /**
-     * Сеттер массива фильтров аппендера
-     * @param filter - массив фильтров аппендера
-     */
-    @XmlElement(name = "Filter")
-    public void setFilter(Filter... filter) {
-        this.filter = filter;
-    }
+            Constructor constructor = null;
 
-    /**
-     * Метод для форматирования трассировки стека исключения в строку
-     * @param exception - объект исключения
-     * @return stackTrace - строка трассировки стека исключения
-     */
-    protected String getPrintStacTrace(Throwable... exception) {
+            if (cl.toString().compareTo("class lab3.logger.append.FileAppender") == 0) {
+                constructor = cl.getConstructor(Layout.class);
+                appender = (Appender) constructor.newInstance(layout);
+                return appender;
+            }
 
-        StringWriter sw = null;
-        String stackTrace = null;
+            constructor = cl.getConstructor(Layout.class);
 
-        if (exception.length != 0) {
-
-            sw = new StringWriter();
-            PrintWriter pw =new PrintWriter(sw);
-            exception[0].printStackTrace(pw);
-            stackTrace = sw.toString();
+            appender = (Appender) constructor.newInstance(layout);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
-
-        return stackTrace;
+        return appender;
     }
 
-    /**
-     * Абстрактный метод, служащий для записи логов
-     * @param level - уровень логирования
-     * @param clazz - класс в котором создаются логи
-     * @param threadName - имя потока
-     * @param message - сообщение пользователя
-     * @param exception - объект исключения
-     */
-    public abstract void log(Level level, Class clazz, String threadName, String message, Throwable... exception);
+    public Appender() {}
+
+    public abstract void log(Level level, Class clazz, String message);
+
 }
