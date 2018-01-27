@@ -19,42 +19,41 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+/**
+ * Класс, предстваляющий логер
+ * @author Кирилл
+ * @version 1.0
+ */
 public class Logger{
+
+    /**
+     * Класс для которого создается логер
+     */
     Class clazz;
 
+    /**
+     * Коллекция аппендеров с соответсувующими им уровнями
+     */
     private TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
 
+    /**
+     * Конструктор класса Logger
+     * @param clazz - класс для которого создается логер
+     * @param appenderLevels - коллекция аппендеров с соответсувующими им уровнями
+     */
     private Logger(Class clazz, TreeSet<AppenderLevel> appenderLevels) {
         this.clazz = clazz;
         this.appenderLevels = appenderLevels;
     }
 
+    /**
+     * Статический метод для создания логера на основе конфигураций (созданных на основе Java кода)
+     * @param clazz - класс для которого создается логер
+     * @return готовый логер
+     */
     public static Logger getLogger(Class clazz) {
 
         TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
-
-        /*try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            marshaller.marshal(new Config().readConfig(), new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        /*Config configUnmarshl = null;
-
-        try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            configUnmarshl = (Config) unmarshaller.unmarshal(new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }*/
 
         String className = clazz.getName();
 
@@ -95,32 +94,14 @@ public class Logger{
         return new Logger(clazz, appenderLevels);
     }
 
+    /**
+     * Статический метод для создания логера на основе конфигураций (созданных на основе XML файла)
+     * @param clazz - класс для которого создается логер
+     * @return готовый логер
+     */
     public static Logger getLogger(Class clazz, String fileConfigName) {
 
         TreeSet<AppenderLevel> appenderLevels = new TreeSet<>();
-
-        /*try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            marshaller.marshal(SingletonConfig.getConfig().readConfig(), new File("config.xml"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Config configUnmarsh = null;
-
-        try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            configUnmarsh = (Config) unmarshaller.unmarshal(new File(fileConfigName));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }*/
 
         String className = clazz.getName();
 
@@ -156,6 +137,12 @@ public class Logger{
         return new Logger(clazz, appenderLevels);
     }
 
+    /**
+     * Метод вызываемый для логирования, в нем выбираются аппендеры данного логера, которым нужно отправить лог
+     * @param level - уровень логирования
+     * @param message - сообщение пользователя
+     * @param exception - исключение
+     */
     public void log(Level level, String message, Throwable... exception) {
         SortedSet<AppenderLevel> la = appenderLevels.tailSet(new AppenderLevel(level, null), true);
 

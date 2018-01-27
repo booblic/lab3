@@ -2,20 +2,34 @@ package lab3.logger.layout;
 
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Класс представляющий шаблон лога
+ * @author Кирилл
+ * @version 1.0
+ */
 public class Layout {
 
+    /**
+     * Строка, описывающая шаблон лога
+     */
     private String layouts;
 
+    /**
+     * Разделитель информации в логе
+     */
     private String separator;
 
+    /**
+     * Конструктор шаблона лога
+     * @param layouts - строка, описывающая шаблон лога
+     * @param separator -разделитель информации в логе
+     */
     public Layout(String layouts, String... separator) {
         this.layouts = layouts;
         if (separator.length == 0) {
@@ -25,26 +39,54 @@ public class Layout {
         }
     }
 
+    /**
+     * Конструктор по-умолчанию, для рефлексивного создания объекта после анмаршлинга
+     */
     public Layout() {}
 
+    /**
+     * Сеттер строки, описывающий шаблон лога
+     * @param layout - строка, описывающая шаблон лога
+     */
     @XmlElement(name = "Layout")
     public void setLayouts(String layout) {
         this.layouts = layout;
     }
 
+    /**
+     * Геттер строки, описывающий шаблон лога
+     * @return layouts - строка, описывающая шаблон лога
+     */
     public String getLayouts() {
         return layouts;
     }
 
+    /**
+     * Геттер разделителя информации в логе
+     * @return separator - разделитель информации в логе
+     */
     public String getSeparator() {
         return separator;
     }
 
+    /**
+     * Сеттер разделителя информации в логе
+     * @param separator - разделитель информации в логе
+     */
     @XmlElement(name = "Separator")
     public void setSeparator(String separator) {
         this.separator = separator;
     }
 
+    /**
+     * Метод, служащий для формирования строки лога в соответствии с заданным шаблоном
+     * @param level - уровень логирования
+     * @param clazz - класс в котором создаются логи
+     * @param threadName - имя потока
+     * @param message - сообщение пользователя
+     * @param stackTrace - строка, представляющая трассировку стека исключения
+     * @return строка лога, готовая для записи
+     */
     public String messageBuilder(Level level, Class clazz, String threadName, String message, String... stackTrace) {
         StringBuilder stringBuilder = new StringBuilder();
 

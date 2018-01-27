@@ -5,14 +5,32 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
+/**
+ * Синглтон для создания и хранения конфигураций логера созданных на основе Java кода и XML файла
+ * @author Кирилл
+ * @version 1.0
+ */
 public class SingletonConfig {
 
+    /**
+     * Конфигурации логера созданных на основе Java кода
+     */
     private static volatile Config codeConfig;
 
+    /**
+     * Конфигурации логера созданных на основе XML файла
+     */
     private static volatile Config xmlConfig;
 
+    /**
+     * Конструктор по-умолчанию
+     */
     private SingletonConfig() {}
 
+    /**
+     * Метод для получания объекта конфигураций логера созданных на основе Java кода
+     * @return конфигурации логера созданных на основе Java кода
+     */
     public static Config getConfig() {
         Config localCodeConfig = codeConfig;
         if (localCodeConfig == null) {
@@ -26,6 +44,11 @@ public class SingletonConfig {
         return localCodeConfig;
     }
 
+    /**
+     * Метод для получания объекта конфигураций логера созданных на основе XML файла
+     * @param fileConfigName - путь к файлу с конфигурацией
+     * @return конфигурации логера созданных на основе XML файла
+     */
     public static Config getConfig(String fileConfigName) {
         Config localXmlConfig = xmlConfig;
         if (localXmlConfig == null) {

@@ -31,7 +31,7 @@
             </Appender>
             <Level>WARN</Level>
         </AppenderLevel>
-        <AppenderLevel>
+        <!---<AppenderLevel>
             <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender" Driver="com.mysql.jdbc.Driver">
                 <Filter xsi:type="DefaultFilter"/>
                 <Layouts>
@@ -44,6 +44,6 @@
                 <UserName>kirill</UserName>
             </Appender>
             <Level>INFO</Level>
-        </AppenderLevel>
+        </AppenderLevel>-->
     </Configuration>
 </Configurations>

@@ -11,17 +11,50 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Класс представляющий аппендер базы данных
+ * @author Кирилл
+ * @version 1.0
+ */
 @XmlType(name = "DataBaseAppender")
 @XmlRootElement
 public class DataBaseAppender extends Appender {
 
+    /**
+     * URL для подключения к базе данных
+     */
     private String url;
-    private String userName;
-    private String password;
-    private String driver;
-    private String sqlRequest;
-    //private String columnOrder;
 
+    /**
+     * Имя пользователя для подключения к базе данных
+     */
+    private String userName;
+
+    /**
+     * Пароль для подключения к базе данных
+     */
+    private String password;
+
+    /**
+     * Драйвер базы данных
+     */
+    private String driver;
+
+    /**
+     * SQL запрос
+     */
+    private String sqlRequest;
+
+    /**
+     * Конструктор консольного аппендера
+     * @param url - URL для подключения к базе данных
+     * @param userName - имя пользователя для подключения к базе данных
+     * @param password - пароль для подключения к базе данных
+     * @param driver - драйвер базы данных
+     * @param sqlRequest - SQL запрос
+     * @param layout - шаблон лога аппендера
+     * @param filter - массив фильтров аппендера
+     */
     public DataBaseAppender(String url, String userName, String password, String driver, String sqlRequest, Layout layout, Filter... filter) {
         super(layout, filter);
         this.url = url;
@@ -29,67 +62,106 @@ public class DataBaseAppender extends Appender {
         this.password = password;
         this.driver = driver;
         this.sqlRequest = sqlRequest;
-        //this.columnOrder = columnOrder;
     }
 
+    /**
+     * Конструктор по-умолчанию, для рефлексивного создания объекта после анмаршлинга
+     */
     public DataBaseAppender() {}
 
+    /**
+     * Геттер URL для подключения к базе данных
+     * @return url - URL для подключения к базе данных
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Сеттер URL
+     * @param url - URL для подключения к базе данных
+     */
     @XmlElement(name = "URL")
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     * Геттер имени пользователя
+     * @return userName - имя пользователя
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Сеттер имени пользователя
+     * @param userName - имя пользователя для подключения к базе данных
+     */
     @XmlElement(name = "UserName")
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /**
+     * Геттер пароля
+     * @return password - пароль для подключения к базе данных
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Сеттер пароля
+     * @param password - пароль для подключения к базе данных
+     */
     @XmlElement(name = "Password")
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Геттер драйвера базы данных
+     * @return driver - драйвер базы данных
+     */
     public String getDriver() {
         return driver;
     }
 
+    /**
+     * Сеттер драйвера базы данных
+     * @param driver - драйвер базы данных
+     */
     @XmlAttribute(name = "Driver")
     public void setDriver(String driver) {
         this.driver = driver;
     }
 
+    /**
+     * Геттер SQL запроса
+     * @return sqlRequest - SQL запрос
+     */
     public String getSqlRequest() {
         return sqlRequest;
     }
 
+    /**
+     * Сеттер SQL запроса
+     * @param sqlRequest - SQL запрос
+     */
     @XmlElement(name = "SQLRequest")
     public void setSqlRequest(String sqlRequest) {
         this.sqlRequest = sqlRequest;
     }
 
-
-    /*public String getColumnOrder() {
-        return columnOrder;
-    }
-
-    @XmlElement(name = "ColumnOrder")
-    public void setColumnOrder(String columnOrder) {
-        this.columnOrder = columnOrder;
-    }*/
-
-
+    /**
+     * Метод, служащий для записи логов в базу данных
+     * @param level - уровень логирования
+     * @param clazz - класс в котором создаются логи
+     * @param threadName - имя потока
+     * @param message - сообщение пользователя
+     * @param exception - объект исключения
+     */
     @Override
     public void log(Level level, Class clazz, String threadName, String message, Throwable... exception) {
         for (Filter f: getFilter()) {

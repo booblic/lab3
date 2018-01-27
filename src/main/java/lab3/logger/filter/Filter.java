@@ -1,13 +1,14 @@
 package lab3.logger.filter;
 
-import lab3.logger.append.ConsolAppender;
-import lab3.logger.append.FileAppender;
 import lab3.logger.level.Level;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import java.io.StringWriter;
 
+/**
+ * Абстрактный класс, точка иерархии всех фильтров
+ * @author Кирилл
+ * @version 1.0
+ */
 @XmlSeeAlso({
         MessageTextFilter.class,
         ExceptionTextFilter.class,
@@ -18,7 +19,19 @@ import java.io.StringWriter;
 })
 public abstract class Filter {
 
+    /**
+     * Конструктор по-умолчанию, для рефлексивного создания объекта после анмаршлинга
+     */
     public Filter() {}
 
-    public abstract boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exeption);
+    /**
+     * Абстрактный метод, служащий для фильтрации логов
+     * @param level - уровень логирования
+     * @param clazz - класс в котором создаются логи
+     * @param threadName - имя потока
+     * @param message - сообщение пользователя
+     * @param exсeption - объект исключения
+     * @return true/false - пропускает/не пропускает
+     */
+    public abstract boolean filter(Level level, Class clazz, String threadName, String message, Throwable... exсeption);
 }

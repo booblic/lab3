@@ -5,8 +5,9 @@ import lab3.logger.level.Level;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * @author VYZH
- * @since 22.01.2018
+ * Адаптер для анмаршлинга уронвя логирования из XML
+ * @author Кирилл
+ * @version 1.0
  */
 public class LevelAdapter extends XmlAdapter<String, Level> {
     @Override

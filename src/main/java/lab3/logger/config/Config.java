@@ -17,25 +17,51 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс для задания и хранения конфигураций логера
+ * @author Кирилл
+ * @version 1.0
+ */
 @XmlRootElement(name = "Configurations")
 public class Config {
 
+    /**
+     * Коллекция для хранения конфигураций логгера
+     */
     private List<Configuration> configurations = new ArrayList<>();
 
+    /**
+     * Конструктор по-умолчанию, для рефлексивного создания объекта после анмаршлинга
+     */
     public Config() {}
 
+    /**
+     * Геттер коллекции с конфигурациями логера
+     * @return configurations - коллекция с конфигурациями логгера
+     */
     public List<Configuration> getConfigurations() {
         return configurations;
     }
 
+    /**
+     * Сеттер коллекции с конфигурациями логера
+     * @param configurations - коллекция с конфигурациями логгера
+     */
     @XmlElement(name = "Configuration")
     public void setConfigurations(List<Configuration> configurations) {
         this.configurations = configurations;
     }
 
-
+    /**
+     * Метод для поулчения конфигураций логера, заданных через Java код
+     * @return this - объект содержащий конфигурации логера
+     */
     public Config readConfig() throws IOException {
         String category1 = "lab3.logger.main";
+
+        String category3 = "lab3.logger.Test";
+
+        List<AppenderLevel> appenderLevelList3 = new ArrayList<>();
 
         List<AppenderLevel> appenderLevelList1 = new ArrayList<>();
 
@@ -49,6 +75,11 @@ public class Config {
                             new Layout("%p %d{H:m:s,Y.M.D} %c %m %t %s", "|"),
                             new MessageTextFilter("System")));
 
+        AppenderLevel levApp3 = new AppenderLevel(
+                Level.DEBUG,
+                new ConsolAppender(new Layout("%p %d{H:m:s,Y.M.D} %c %t %m", "|"),
+                        new MessageTextFilter("message")));
+
         AppenderLevel levApp2 = new AppenderLevel(
                 Level.INFO,
                     new DataBaseAppender("jdbc:mysql://localhost:3306/mydatabase", "kirill", "123456",
@@ -59,12 +90,16 @@ public class Config {
         //AppenderLevel levApp3 = new AppenderLevel(Level.TRACE, new DataBaseAppender("jdbc:mysql://127.0.0.1:3306/mydatabase", "kirill", "123456", new Layout("%p %d{H:m:s,Y.M.D} %c %m")));
 
         appenderLevelList1.add(levApp1);
-        appenderLevelList1.add(levApp2);
+        //appenderLevelList1.add(levApp2);
         //appenderLevelList1.add(levApp3);
 
-        Configuration c1 = new Configuration(category1, appenderLevelList1);
+        appenderLevelList3.add(levApp3);
 
+        Configuration c1 = new Configuration(category1, appenderLevelList1);
         configurations.add(c1);
+
+        Configuration c3 = new Configuration(category3, appenderLevelList3);
+        configurations.add(c3);
 
         return this;
     }
