@@ -6,44 +6,57 @@
         </Category>
         <AppenderLevel>
             <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ConsolAppender">
-                <Filter xsi:type="MessageTextFilter" Invert="false">
-                    <KeyWord>123</KeyWord>
-                </Filter>
                 <Filter xsi:type="LevelFilter">
-                    <KeyLevel>ERROR</KeyLevel>
+                    <Key>WARN</Key>
                 </Filter>
-                <Filter xsi:type="ExceptionTextFilter">
-                    <KeyException>NullPointerException</KeyException>
-                </Filter>
-                <Layouts>
-                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
-                    <Separator>|</Separator>
-                </Layouts>
-            </Appender>
-            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
                 <Filter xsi:type="MessageTextFilter" Invert="false">
-                    <KeyWord>System</KeyWord>
+                    <Key>message</Key>
                 </Filter>
                 <Layouts>
-                    <Layout>%p %d{H:m:s,Y.M.D} %c %m %t %s</Layout>
-                    <Separator>|</Separator>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
                 </Layouts>
-            </Appender>
-            <Level>WARN</Level>
-        </AppenderLevel>
-        <!---<AppenderLevel>
-            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender" Driver="com.mysql.jdbc.Driver">
-                <Filter xsi:type="DefaultFilter"/>
-                <Layouts>
-                    <Layout>%d{H:m:s,Y.M.D} %p %c %t %m %s</Layout>
-                    <Separator>|</Separator>
-                </Layouts>
-                <Password>123456</Password>
-                <SQLRequest>INSERT INTO log_table(date, level, class, thread, message, stacktrace) VALUES(?, ?, ?, ?, ?, ?)</SQLRequest>
-                <URL>jdbc:mysql://localhost:3306/mydatabase</URL>
-                <UserName>kirill</UserName>
             </Appender>
             <Level>INFO</Level>
-        </AppenderLevel>-->
+        </AppenderLevel>
+        <AppenderLevel>
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="FileAppender" FileName="log.txt">
+                <Filter xsi:type="LevelFilter">
+                    <Key>INFO</Key>
+                </Filter>
+                <!--<Filter xsi:type="MessageTextFilter" Invert="false">
+                    <Key>message</Key>
+                </Filter>-->
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                </Layouts>
+            </Appender>
+            <Level>DEBUG</Level>
+        </AppenderLevel>
+        <AppenderLevel>
+            <!--<Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender"
+                      URL="jdbc:mysql://127.0.0.1:3306/mydatabase"
+                      UserName="kirill"
+                      Password="123456"
+                      DriverClass="com.mysql.jdbc.Driver">
+                <Layouts>
+                    <Layout>%p %d{H:m:s,Y.M.D} %c %m</Layout>
+                </Layouts>
+            </Appender>-->
+            <Appender xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DataBaseAppender"
+                      URL="jdbc:h2:./db"
+                      UserName="SA"
+                      Password=""
+                      DriverClass="org.h2.Driver">
+                <sql>
+                    INSERT INTO log_table(level, message, date_time) VALUES(?, ?, ?)
+                </sql>
+                <parameters>
+                    <parameter>%p</parameter>
+                    <parameter>%m</parameter>
+                    <parameter>%d{H:m:s,Y.M.D}</parameter>
+                </parameters>
+            </Appender>
+            <Level>TRACE</Level>
+        </AppenderLevel>
     </Configuration>
 </Configurations>
